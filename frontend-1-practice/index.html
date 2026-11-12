@@ -1,26 +1,115 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Выбор даты и времени</title>
-    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Выберите дату и время — Scissor&amp;</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
-  <body>
-    <!--
-      ЗАДАНИЕ
-      ========
-      Сверстать страницу выбора даты и времени по своему макету.
+  <body class="page">
+    <header class="site-header">
+      <button class="brand" type="button" aria-label="Scissor&amp; — на главную">Scissor&amp;</button>
+      <span class="header-label">Онлайн-запись</span>
+    </header>
 
-      Пока это только вёрстка. Никакого JavaScript — ни кликов,
-      ни переходов, ни выбора дня. Всё статично.
+    <main class="booking">
+      <button class="back" type="button">←&ensp;Назад</button>
+      <header class="booking-header">
+        <p class="eyebrow">Шаг 3 из 5</p>
+        <h1 class="page-title">Выберите дату и время</h1>
+        <ol class="steps" aria-label="Шаги записи">
+          <li class="step step-done">Мастер</li>
+          <li class="step step-done">Услуга</li>
+          <li class="step" aria-current="step">Время</li>
+          <li class="step">Контакты</li>
+          <li class="step">Проверка</li>
+        </ol>
+      </header>
 
-      Стили пишите в styles.css. Разметку — здесь.
-    -->
+      <div class="booking-layout">
+        <section class="schedule panel" aria-labelledby="month">
+          <h2 class="month" id="month">Март 2027</h2>
+          <div class="schedule-layout">
+            <div class="calendar" role="group" aria-label="Календарь на март 2027">
+              <span class="weekday">Пн</span>
+              <span class="weekday">Вт</span>
+              <span class="weekday">Ср</span>
+              <span class="weekday">Чт</span>
+              <span class="weekday">Пт</span>
+              <span class="weekday">Сб</span>
+              <span class="weekday">Вс</span>
+              <span class="day">1</span>
+              <span class="day">2</span>
+              <span class="day">3</span>
+              <span class="day">4</span>
+              <span class="day">5</span>
+              <span class="day">6</span>
+              <span class="day">7</span>
+              <span class="day">8</span>
+              <span class="day">9</span>
+              <span class="day">10</span>
+              <span class="day">11</span>
+              <button class="day day-selected" type="button" aria-label="12 марта" aria-pressed="true">12</button>
+              <button class="day day-open" type="button" aria-label="13 марта" aria-pressed="false">13</button>
+              <span class="day">14</span>
+              <span class="day">15</span>
+              <span class="day">16</span>
+              <span class="day">17</span>
+              <span class="day">18</span>
+              <span class="day">19</span>
+              <span class="day">20</span>
+              <span class="day">21</span>
+              <span class="day">22</span>
+              <span class="day">23</span>
+              <span class="day">24</span>
+              <span class="day">25</span>
+              <span class="day">26</span>
+              <span class="day">27</span>
+              <span class="day">28</span>
+              <span class="day">29</span>
+              <span class="day">30</span>
+              <span class="day">31</span>
+            </div>
+            <section class="times" aria-labelledby="selected-date">
+              <h3 class="date-title" id="selected-date">12 марта</h3>
+              <p class="date-weekday">Пятница</p>
+              <button class="slot" type="button" aria-label="12:00, свободное время">12:00</button>
+              <button class="slot" type="button" disabled>16:30 · занято</button>
+              <p class="slot-caption">Свободное время</p>
+            </section>
+          </div>
+          <p class="availability">Открыта запись на 12 и 13 марта.</p>
+          <p class="hint">Выберите свободное время, чтобы продолжить.</p>
+        </section>
 
-    <div class="page">
-      <!-- Начните отсюда. Разметьте шапку, основную область
-           с календарём и слотами, подвал. -->
-    </div>
+        <aside class="summary panel" aria-labelledby="summary-title">
+          <h2 class="eyebrow summary-title" id="summary-title">Твоя запись</h2>
+          <dl class="details">
+            <div class="detail">
+              <dt class="detail-label">Мастер</dt>
+              <dd class="detail-value">Павел Левин</dd>
+            </div>
+            <div class="detail">
+              <dt class="detail-label">Услуга</dt>
+              <dd class="detail-value">Мужская стрижка</dd>
+            </div>
+            <div class="detail">
+              <dt class="detail-label">Длительность</dt>
+              <dd class="detail-value">60 минут</dd>
+            </div>
+            <div class="detail">
+              <dt class="detail-label">Стоимость</dt>
+              <dd class="detail-value">2 400 ₽</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span class="footer-brand">Scissor&amp;</span>
+      <address class="address">Санкт-Петербург&ensp;·&ensp;Набережная, 12</address>
+      <span class="hours">Ежедневно&ensp;10:00–21:00</span>
+    </footer>
   </body>
 </html>
