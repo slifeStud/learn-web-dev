@@ -1,67 +1,149 @@
-// JavaScript для страницы выбора даты и времени.
-//
-// ЗАДАНИЕ
-// ========
-// Оживить свою свёрстанную страницу. Скорее всего на ней будет работать:
-//   1. При открытии страницы выбрать день по умолчанию.
-//   2. По клику на день — день становится выбранным,
-//      слоты обновляются.
-//   3. По клику на слот — время становится выбранным,
-//      попадает в нижнюю панель.
-//   4. Стрелки «‹» и «›» листают месяцы.
-//   5. Дни раньше «сегодня» нельзя выбрать.
-//   6. Нижняя панель обновляется при выборе дня и времени.
-//
-// ГДЕ ЖИВУТ ДАННЫЕ
-// ----------------
-// Слотов пока нет с сервера. Захардкодьте массив в этом файле.
-// Формат слота: { time: "10:00", available: true }.
-// «Сегодня» можно взять из new Date() или захардкодить —
-// как удобнее для проверки.
-//
-// СТРУКТУРА КОДА
-// --------------
-// Разделите код на смысловые части комментариями:
-//   1. Данные (слоты, «сегодня»).
-//   2. Состояние (месяц, день, время, слоты).
-//   3. Чистые функции (для работы с датами).
-//   4. Отрисовка и обработчики.
-//   5. Инициализация.
-//
-// ЧИСТЫЕ ФУНКЦИИ
-// --------------
-// Если понадобится строить сетку календаря — вот функция,
-// которую можно использовать. Она не зависит от DOM,
-// просто принимает год и месяц и возвращает массив недель.
-//
-// function buildCalendarGrid(year, month) {
-//   const firstDay = new Date(year, month, 1);
-//   const lastDay = new Date(year, month + 1, 0);
-//   const daysInMonth = lastDay.getDate();
-//   const startDayOfWeek = firstDay.getDay();
-//   const offset = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
-//   const prevMonthLastDay = new Date(year, month, 0).getDate();
-//
-//   const cells = [];
-//
-//   for (let i = offset - 1; i >= 0; i--) {
-//     cells.push({ day: prevMonthLastDay - i, otherMonth: true });
-//   }
-//   for (let d = 1; d <= daysInMonth; d++) {
-//     cells.push({ day: d, otherMonth: false });
-//   }
-//   const totalCells = Math.ceil(cells.length / 7) * 7;
-//   let nextDay = 1;
-//   while (cells.length < totalCells) {
-//     cells.push({ day: nextDay, otherMonth: true });
-//     nextDay++;
-//   }
-//
-//   const weeks = [];
-//   for (let i = 0; i < cells.length; i += 7) {
-//     weeks.push(cells.slice(i, i + 7));
-//   }
-//   return weeks;
-// }
+// 1. Данные. Учебное «сегодня» совпадает с датой в макете.
+const today = new Date(2027, 2, 12);
+const schedule = {
+  "2027-03-12": [
+    { time: "12:00", available: true },
+    { time: "16:30", available: false },
+  ],
+  "2027-03-13": [{ time: "12:00", available: false }],
+};
 
-// Начните писать код здесь.
+const monthFormat = new Intl.DateTimeFormat("ru", { month: "long" });
+const dayFormat = new Intl.DateTimeFormat("ru", { day: "numeric", month: "long" });
+const weekdayFormat = new Intl.DateTimeFormat("ru", { weekday: "long" });
+const fullDateFormat = new Intl.DateTimeFormat("ru", { dateStyle: "full" });
+
+// 2. Состояние календаря и выбора пользователя.
+const state = {
+  month: new Date(today.getFullYear(), today.getMonth(), 1),
+  date: today,
+  time: null,
+};
+
+// 3. Чистые функции.
+function capitalize(text) {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+}
+
+function dateKey(date) {
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${date.getFullYear()}-${month}-${day}`;
+}
+
+// Каждая неделя в сетке начинается с понедельника и заканчивается воскресеньем.
+function buildCalendarGrid(year, month) {
+  const offset = (new Date(year, month, 1).getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const cellCount = Math.ceil((offset + daysInMonth) / 7) * 7;
+  return Array.from({ length: cellCount }, (_, i) => new Date(year, month, i + 1 - offset));
+}
+
+// 4. Отрисовка и обработчики.
+const monthTitle = document.querySelector("#month");
+const days = document.querySelector(".days");
+const slots = document.querySelector(".slots");
+const dateTitle = document.querySelector("#selected-date");
+const weekday = document.querySelector(".date-weekday");
+const selection = document.querySelector(".availability");
+const hint = document.querySelector(".hint");
+
+function renderCalendar() {
+  const year = state.month.getFullYear();
+  const month = state.month.getMonth();
+  monthTitle.textContent = capitalize(monthFormat.format(state.month)) + " " + year;
+  const buttons = buildCalendarGrid(year, month).map(date => {
+    const button = document.createElement("button");
+    const otherMonth = date.getMonth() !== month;
+    const selected = state.date !== null && date.getTime() === state.date.getTime();
+    button.type = "button";
+    button.className = "day";
+    button.textContent = date.getDate();
+    button.dataset.day = date.getDate();
+    button.disabled = otherMonth || date < today;
+    button.classList.toggle("day-other", otherMonth);
+    button.classList.toggle("day-selected", selected);
+    button.classList.toggle("day-open", !selected && !button.disabled && Boolean(schedule[dateKey(date)]));
+    button.setAttribute("aria-label", fullDateFormat.format(date));
+    button.setAttribute("aria-pressed", String(selected));
+    return button;
+  });
+  days.replaceChildren(...buttons);
+}
+
+function renderTimeSlots() {
+  slots.replaceChildren();
+  dateTitle.textContent = state.date ? dayFormat.format(state.date) : "Выберите дату";
+  weekday.textContent = state.date ? capitalize(weekdayFormat.format(state.date)) : "";
+  if (!state.date) return;
+
+  const daySlots = schedule[dateKey(state.date)] || [];
+  for (const slot of daySlots) {
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "slot";
+    button.disabled = !slot.available;
+    button.dataset.time = slot.time;
+    button.textContent = slot.available ? slot.time : slot.time + " · занято";
+    button.setAttribute("aria-pressed", String(slot.time === state.time));
+    slots.append(button);
+  }
+  if (!daySlots.some(slot => slot.available)) {
+    const message = document.createElement("p");
+    message.className = "empty-slots";
+    message.textContent = "В этот день свободного времени нет.";
+    slots.append(message);
+  }
+}
+
+function updateSelection() {
+  if (!state.date) {
+    selection.textContent = "Дата пока не выбрана";
+    hint.textContent = "Выберите день в календаре.";
+    return;
+  }
+  const dateText = capitalize(fullDateFormat.format(state.date));
+  selection.textContent = state.time ? dateText + " • " + state.time : dateText;
+  const hasFreeTime = schedule[dateKey(state.date)]?.some(slot => slot.available);
+  hint.textContent = state.time ? "Время выбрано." :
+    hasFreeTime ? "Выберите свободное время, чтобы продолжить." : "Выберите другую дату.";
+}
+
+function render() {
+  renderCalendar();
+  renderTimeSlots();
+  updateSelection();
+}
+
+function changeMonth(step) {
+  state.month = new Date(state.month.getFullYear(), state.month.getMonth() + step, 1);
+  state.date = null;
+  state.time = null;
+  render();
+}
+
+// 5. Инициализация. Контейнеры сохраняют обработчики при замене кнопок.
+function init() {
+  document.querySelector("#previous-month").addEventListener("click", () => changeMonth(-1));
+  document.querySelector("#next-month").addEventListener("click", () => changeMonth(1));
+  days.addEventListener("click", event => {
+    const button = event.target.closest("button:enabled");
+    if (!button || button.getAttribute("aria-pressed") === "true") return;
+    state.date = new Date(state.month.getFullYear(), state.month.getMonth(), Number(button.dataset.day));
+    state.time = null;
+    render();
+    days.querySelector('[aria-pressed="true"]').focus();
+  });
+  slots.addEventListener("click", event => {
+    const button = event.target.closest("button:enabled");
+    if (!button) return;
+    state.time = button.dataset.time;
+    for (const slot of slots.querySelectorAll("button")) {
+      slot.setAttribute("aria-pressed", String(slot === button));
+    }
+    updateSelection();
+  });
+  render();
+}
+
+document.addEventListener("DOMContentLoaded", init);

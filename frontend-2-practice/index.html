@@ -1,14 +1,92 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Выбор даты и времени</title>
-    <link rel="stylesheet" href="styles.css" />
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Выберите дату и время — Scissor&amp;</title>
+    <link rel="stylesheet" href="styles.css">
   </head>
-  <body>
-    <div class="page">
-      <!-- Перенесите вашу верстку. Удалите статичные данные. Подключите скрипт -->
-    </div>
+  <body class="page">
+    <header class="site-header">
+      <button class="brand" type="button" aria-label="Scissor&amp; — на главную">Scissor&amp;</button>
+      <span class="header-label">Онлайн-запись</span>
+    </header>
+
+    <main class="booking">
+      <button class="back" type="button">←&ensp;Назад</button>
+      <header class="booking-header">
+        <p class="eyebrow">Шаг 3 из 5</p>
+        <h1 class="page-title">Выберите дату и время</h1>
+        <ol class="steps" aria-label="Шаги записи">
+          <li class="step step-done">Мастер</li>
+          <li class="step step-done">Услуга</li>
+          <li class="step" aria-current="step">Время</li>
+          <li class="step">Контакты</li>
+          <li class="step">Проверка</li>
+        </ol>
+      </header>
+
+      <div class="booking-layout">
+        <section class="schedule panel" aria-labelledby="month">
+          <div class="month-heading">
+            <h2 class="month" id="month" aria-live="polite"></h2>
+            <div class="month-controls">
+              <button class="month-arrow" type="button" id="previous-month" aria-label="Предыдущий месяц">‹</button>
+              <button class="month-arrow" type="button" id="next-month" aria-label="Следующий месяц">›</button>
+            </div>
+          </div>
+          <div class="schedule-layout">
+            <div class="calendar" role="group" aria-labelledby="month">
+              <span class="weekday">Пн</span>
+              <span class="weekday">Вт</span>
+              <span class="weekday">Ср</span>
+              <span class="weekday">Чт</span>
+              <span class="weekday">Пт</span>
+              <span class="weekday">Сб</span>
+              <span class="weekday">Вс</span>
+              <div class="days"></div>
+            </div>
+            <section class="times" aria-labelledby="selected-date">
+              <h3 class="date-title" id="selected-date"></h3>
+              <p class="date-weekday"></p>
+              <div class="slots"></div>
+            </section>
+          </div>
+          <div class="selection" role="status">
+            <p class="availability"></p>
+            <p class="hint"></p>
+          </div>
+        </section>
+
+        <aside class="summary panel" aria-labelledby="summary-title">
+          <h2 class="eyebrow summary-title" id="summary-title">Твоя запись</h2>
+          <dl class="details">
+            <div class="detail">
+              <dt class="detail-label">Мастер</dt>
+              <dd class="detail-value">Павел Левин</dd>
+            </div>
+            <div class="detail">
+              <dt class="detail-label">Услуга</dt>
+              <dd class="detail-value">Мужская стрижка</dd>
+            </div>
+            <div class="detail">
+              <dt class="detail-label">Длительность</dt>
+              <dd class="detail-value">60 минут</dd>
+            </div>
+            <div class="detail">
+              <dt class="detail-label">Стоимость</dt>
+              <dd class="detail-value">2 400 ₽</dd>
+            </div>
+          </dl>
+        </aside>
+      </div>
+    </main>
+
+    <footer class="site-footer">
+      <span class="footer-brand">Scissor&amp;</span>
+      <address class="address">Санкт-Петербург&ensp;·&ensp;Набережная, 12</address>
+      <span class="hours">Ежедневно&ensp;10:00–21:00</span>
+    </footer>
+    <script src="script.js"></script>
   </body>
 </html>

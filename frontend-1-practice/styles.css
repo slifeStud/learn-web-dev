@@ -129,6 +129,7 @@ button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
 .day { display: grid; place-items: center; width: min(100%, 38px); height: 32px; color: #76796f; }
 .day-selected, .slot { background: var(--green); color: var(--card); font-weight: 500; }
 .day-open { background: var(--sand); color: var(--ink); font-weight: 500; }
+.calendar button { border: 1px solid var(--green); font-weight: 600; }
 .day-open:hover, .day-selected:hover, .slot:enabled:hover { background: #267456; color: var(--card); }
 
 .times {
@@ -186,4 +187,11 @@ button:focus-visible { outline: 2px solid var(--green); outline-offset: 2px; }
   .times { min-height: auto; padding: 14px 0 0; border: 0; border-top: 1px solid var(--line); }
   .date-weekday { margin-bottom: 16px; }
   .site-footer { grid-template-columns: 1fr; gap: 8px; margin-top: 28px; }
+}
+
+@media (max-width: 380px) {
+  .steps { grid-template-columns: repeat(5, auto); gap: 6px; }
+  .step { font-size: 12px; }
+  .calendar { grid-template-rows: 24px repeat(5, 40px); gap: 4px 0; }
+  .day { height: 40px; }
 }
